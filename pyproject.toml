@@ -7,11 +7,11 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "apprise"
+name = "apprise-herbertgao"
 description = "Push Notifications that work with just about every platform!"
 readme = "README.md"
 authors = [
-    { name = "Chris Caron", email = "lead2gold@gmail.com" },
+    { name = "Herbert Gao", email = "heapcn@gmail.com" },
 ]
 dynamic = ["version"]
 
@@ -223,10 +223,10 @@ windows = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/caronc/apprise"
-Source = "https://github.com/caronc/apprise"
-Tracker = "https://github.com/caronc/apprise/issues"
-Documentation = "https://github.com/caronc/apprise/wiki"
+Homepage = "https://github.com/HerbertGao/apprise"
+Source = "https://github.com/HerbertGao/apprise"
+Tracker = "https://github.com/HerbertGao/apprise/issues"
+Documentation = "https://github.com/HerbertGao/apprise/wiki"
 
 [project.scripts]
 apprise = "apprise.cli:main"
