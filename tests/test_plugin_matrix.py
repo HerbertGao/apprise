@@ -585,7 +585,7 @@ def test_plugin_matrix_fetch(mock_post, mock_get, mock_put):
         "retry_after_ms": 1,
     })
 
-    code, response = obj._fetch("/retry/apprise/unit/test")
+    code, _response = obj._fetch("/retry/apprise/unit/test")
     assert code is False
 
     request.content = dumps(
@@ -595,11 +595,11 @@ def test_plugin_matrix_fetch(mock_post, mock_get, mock_put):
             }
         }
     )
-    code, response = obj._fetch("/retry/apprise/unit/test")
+    code, _response = obj._fetch("/retry/apprise/unit/test")
     assert code is False
 
     request.content = dumps({"error": {}})
-    code, response = obj._fetch("/retry/apprise/unit/test")
+    code, _response = obj._fetch("/retry/apprise/unit/test")
     assert code is False
     del obj
 
@@ -911,6 +911,22 @@ def test_plugin_matrix_url_parsing():
     assert "#room1" in result["targets"]
     assert "#room2" in result["targets"]
     assert "#room3" in result["targets"]
+
+    # Mixed-case alias with underscore should parse
+    result = NotifyMatrix.parse_url(
+        "matrix://user:token@localhost?to=#Dev_Room:localhost"
+    )
+    assert isinstance(result, dict) is True
+    assert len(result["targets"]) == 1
+    assert "#Dev_Room:localhost" in result["targets"]
+
+    # Mixed-case room id with underscore should be accepted by _room_join
+    from apprise.plugins.matrix import IS_ROOM_ID  # local alias
+    nm = NotifyMatrix(host="localhost")
+    nm.access_token = "abc"   # simulate logged-in
+    nm.home_server = "localhost"
+    # this should NOT be rejected by the regex
+    assert IS_ROOM_ID.match("!Jm_LvU1nas_8KJPBmN9n:nginx.eu")
 
 
 @mock.patch("requests.put")

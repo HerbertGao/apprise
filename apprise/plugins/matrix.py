@@ -69,17 +69,18 @@ MATRIX_HTTP_ERROR_MAP = {
 
 # Matrix Room Syntax
 IS_ROOM_ALIAS = re.compile(
-    r"^\s*(#|%23)?(?P<room>[a-z0-9-]+)((:|%3A)"
-    r"(?P<home_server>[a-z0-9.-]+))?\s*$",
+    r"^\s*(#|%23)?(?P<room>[A-Za-z0-9._=-]+)((:|%3A)"
+    r"(?P<home_server>[A-Za-z0-9.-]+))?\s*$",
     re.I,
 )
 
 # Room ID MUST start with an exclamation to avoid ambiguity
 IS_ROOM_ID = re.compile(
-    r"^\s*(!|&#33;|%21)(?P<room>[a-z0-9-]+)((:|%3A)"
-    r"(?P<home_server>[a-z0-9.-]+))?\s*$",
+    r"^\s*(!|&#33;|%21)(?P<room>[A-Za-z0-9._=-]+)((:|%3A)"
+    r"(?P<home_server>[A-Za-z0-9.-]+))?\s*$",
     re.I,
 )
+
 
 # Matrix is_image check
 IS_IMAGE = re.compile(r"^image/.*", re.I)
@@ -254,7 +255,7 @@ class NotifyMatrix(NotifyBase):
             "target_room_alias": {
                 "name": _("Target Room Alias"),
                 "type": "string",
-                "prefix": "!",
+                "prefix": "#",
                 "map_to": "targets",
             },
             "targets": {
@@ -732,7 +733,7 @@ class NotifyMatrix(NotifyBase):
                 }
 
                 # Post our content
-                postokay, response = self._fetch(
+                postokay, _response = self._fetch(
                     path, payload=image_payload)
                 if not postokay:
                     # Mark our failure
@@ -744,7 +745,7 @@ class NotifyMatrix(NotifyBase):
                     attachment["room_id"] = room_id
                     attachment["type"] = "m.room.message"
 
-                    postokay, response = self._fetch(
+                    postokay, _response = self._fetch(
                         path, payload=attachment, method=method)
 
                     # Increment the transaction ID to avoid future messages
@@ -804,7 +805,7 @@ class NotifyMatrix(NotifyBase):
                 })
 
             # Post our content
-            postokay, response = self._fetch(
+            postokay, _response = self._fetch(
                 path, payload=payload, method=method
             )
 
@@ -1814,7 +1815,7 @@ class NotifyMatrix(NotifyBase):
         #
         verify_url = f"{base_url}/_matrix/client/versions"
         # Post our content
-        code, response = self._fetch(
+        code, _response = self._fetch(
             None, method="GET", url_override=verify_url
         )
         if code != requests.codes.ok:
@@ -1856,7 +1857,7 @@ class NotifyMatrix(NotifyBase):
             verify_url = f"{identity_url}/_matrix/identity/v2"
 
             # Post our content
-            code, response = self._fetch(
+            code, _response = self._fetch(
                 None, method="GET", url_override=verify_url
             )
             if code != requests.codes.ok:
